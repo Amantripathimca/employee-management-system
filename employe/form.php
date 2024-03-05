@@ -1,0 +1,141 @@
+<?php include 'conn.php' ?>
+<?php
+if(isset($_POST['Search'])) {
+    $Search=$_POST['searchid'];
+    $sql= "select * from data where emp_id='$Search'";
+    $query=mysqli_query($con,$sql);
+    $result=mysqli_fetch_assoc($query);
+  
+}
+ ?>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+<body>
+    <div class="cen">
+ <h1>Employee Data Entry Automation Software</h1>
+
+    <form method="post" action="#">
+<input type="text" name="searchid" placeholder="Search ID" value="<?php if(isset($_POST['Search'])) {echo $result['emp_id'];}?>"><br>
+<input type="text" name="name" placeholder="Employee Name" value="<?php if(isset($_POST['Search'])) {echo $result['emp_name'];}?>"><br>
+<select name="gender" id="gender">
+                <option value="not sel">Select Gender</option>
+                <option value="Male"
+                <?php 
+                if(isset($_POST['Search'])){
+                if($result['emp_gender']=='Male'){
+                    echo "Selected"; 
+                }}?>
+                >Male</option>
+                <option value="Female"
+                <?php 
+                if(isset($_POST['Search'])){
+                if($result['emp_gender']=='Female'){
+                    echo "Selected"; 
+                }}?>
+                >Female</option>
+
+                <option value="Transgender"
+                <?php 
+                if(isset($_POST['Search'])){
+                if($result['emp_gender']=='Transgender'){
+                    echo "Selected"; 
+                }}?>
+                
+                >Transgender</option>
+
+    </select><br>
+
+    <input type="text" value="<?php if(isset($_POST['Search'])) {echo $result['emp_email'];}?>" name="email" placeholder="Email Address" ><br>
+   
+    <select name="department" id="dep">
+    <option value="not selected">Select Department</option>
+                <option value="IT"
+                <?php 
+                if(isset($_POST['Search'])){
+                if($result['emp_department']=='IT'){
+                    echo "Selected"; 
+                }}?>
+                >Information Technology</option>
+                <option value="Management"
+                <?php 
+                if(isset($_POST['Search'])){
+                if($result['emp_department']=='Management'){
+                    echo "Selected"; 
+                }}?>
+                >Management</option>
+                <option value="Operations"
+                <?php 
+                if(isset($_POST['Search'])){
+                if($result['emp_department']=='Operations'){
+                    echo "Selected"; 
+                }}?>
+                >Operations</option>
+                <option value="Finance"
+                <?php 
+                if(isset($_POST['Search'])){
+                if($result['emp_department']=='Finance'){
+                    echo "Selected"; 
+                }}?>
+                >Finance</option>
+    </select><br>
+   
+        <textarea name="address" id="" cols="10" rows="5" placeholder="Address" ><?php if(isset($_POST['Search'])){ echo $result['emp_address'];} ?></textarea><br>
+        <div class="btn">
+     <input type="submit" class="submit" value="Search" name="Search">
+     <input type="submit" class="Save" value="Save" name="save">
+     <input type="submit" class="Modify" value="Modify" name="modify">
+     <input type="submit" class="Delete" value="Delete" name="delete" onclick="return checkdelete()">
+     <input type="Reset" class="Clear" value="Clear" name="clear">
+    </form><br>
+    </div>
+    </div>
+</body>
+
+</html>
+<script>
+    function checkdelete(){
+        return confirm("Are you sure and want to delete this record?");}
+</script>
+<?php
+if(isset($_POST['save']))
+{
+    $name=$_POST['name'];
+    $gender=$_POST['gender'];
+    $email=$_POST['email'];
+    $department=$_POST['department'];
+    $address=$_POST['address'];
+    $query="insert into data(emp_name,emp_gender,emp_email,emp_department,emp_address) values ('$name','$gender','$email','$department','$address')";
+    $res= mysqli_query($con,$query);
+if($res){
+    echo"saved";
+}
+else{
+    echo"fail";
+}
+}
+
+
+?>
+
+<?php
+if(isset($_POST['delete'])){
+    $id =$_POST['searchid'];
+    $query = "DELETE from data WHERE emp_id='$id' ";
+
+    $result = mysqli_query($con, $query);
+    if ($result)
+    {
+        echo "<script> alert('Data Deleted Successfully!') </script>";
+    }
+    else
+    {
+        echo "<script> alert('Data Not Deleted') </script>";
+}
+}
+?>
